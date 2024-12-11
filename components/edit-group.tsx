@@ -20,11 +20,12 @@ import { ApiError, ApiResponse } from "@/types/api";
 import { updateGroupSchema, UpdateGroupType } from "@/validation/groups";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit, Loader2 } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 function EditGroup({ name }: { name: string }) {
+  const router = useRouter();
   const { groupId } = useParams<{ groupId: string }>();
   const form = useForm<UpdateGroupType>({
     defaultValues: {
@@ -60,6 +61,8 @@ function EditGroup({ name }: { name: string }) {
       }> = await response.json();
 
       toast.success(result.message);
+
+      router.refresh();
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);

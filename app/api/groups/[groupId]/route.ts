@@ -3,7 +3,6 @@ import { getSession } from "@/lib/token";
 import { updateGroupSchema } from "@/validation/groups";
 import { idSchema } from "@/validation/id";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -12,11 +11,9 @@ export async function GET(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const valid = idSchema.safeParse(groupIdUnsafe);
 
     if (!valid.success) {
@@ -79,8 +76,6 @@ export async function GET(
       { status: 500 }
     );
   }
-
-  redirect("/dashboard");
 }
 
 export async function DELETE(
@@ -89,11 +84,9 @@ export async function DELETE(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const valid = idSchema.safeParse(groupIdUnsafe);
 
     if (!valid.success) {
@@ -149,7 +142,9 @@ export async function DELETE(
       },
     });
 
-    NextResponse.json(
+    revalidatePath("/dashboard");
+
+    return NextResponse.json(
       { message: "Group deleted sucessfully", data: {} },
       { status: 200 }
     );
@@ -160,8 +155,6 @@ export async function DELETE(
       { status: 500 }
     );
   }
-
-  redirect("/dashboard");
 }
 
 export async function PUT(
@@ -170,11 +163,9 @@ export async function PUT(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const idValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!idValid.success) {
@@ -230,6 +221,7 @@ export async function PUT(
     });
 
     revalidatePath("/dashboard");
+    revalidatePath("/dashboard/groups/[groupId]", "page");
 
     return NextResponse.json(
       { message: "Group updated sucessfully", data: {} },

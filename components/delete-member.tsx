@@ -3,11 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { ApiError, ApiResponse } from "@/types/api";
 import { Loader2, Trash2 } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 function DeleteMember({ memberId }: { memberId: string }) {
+  const router = useRouter();
   const { groupId } = useParams<{ groupId: string }>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +38,8 @@ function DeleteMember({ memberId }: { memberId: string }) {
       }> = await response.json();
 
       toast.success(result.message);
+
+      router.refresh();
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);

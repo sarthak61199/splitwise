@@ -9,11 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ groupId: string }> }
 ) {
   const session = await getSession();
-
   const userId = session?.id as string;
 
   const groupIdUnsafe = (await params).groupId;
-
   const idValid = idSchema.safeParse(groupIdUnsafe);
 
   if (!idValid.success) {

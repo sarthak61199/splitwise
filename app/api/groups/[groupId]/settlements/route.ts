@@ -11,11 +11,9 @@ export async function GET(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const idValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!idValid.success) {
@@ -95,11 +93,9 @@ export async function POST(
   { params }: { params: Promise<{ groupId: string }> }
 ) {
   const session = await getSession();
-
   const userId = session?.id as string;
 
   const groupIdUnsafe = (await params).groupId;
-
   const idValid = idSchema.safeParse(groupIdUnsafe);
 
   if (!idValid.success) {

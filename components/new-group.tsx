@@ -21,10 +21,12 @@ import { ApiError, ApiResponse } from "@/types/api";
 import { createGroupSchema, CreateGroupType } from "@/validation/groups";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 function NewGroup() {
+  const router = useRouter();
   const form = useForm<CreateGroupType>({
     defaultValues: {
       name: "",
@@ -56,6 +58,8 @@ function NewGroup() {
       form.reset();
 
       toast.success(result.message);
+
+      router.refresh();
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);

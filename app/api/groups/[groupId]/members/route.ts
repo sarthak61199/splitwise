@@ -2,6 +2,7 @@ import prisma from "@/lib/db";
 import { getSession } from "@/lib/token";
 import { addMemberSchema } from "@/validation/groups";
 import { idSchema } from "@/validation/id";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -10,11 +11,9 @@ export async function GET(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const idValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!idValid.success) {
@@ -80,11 +79,9 @@ export async function POST(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const idValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!idValid.success) {
@@ -173,6 +170,8 @@ export async function POST(
       },
     });
 
+    revalidatePath("/dashboard/groups/[groupId]", "page");
+
     return NextResponse.json(
       { message: "Member added successfully", data: {} },
       { status: 201 }
@@ -192,11 +191,9 @@ export async function DELETE(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const groupIdValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!groupIdValid.success) {
@@ -281,6 +278,8 @@ export async function DELETE(
         },
       },
     });
+
+    revalidatePath("/dashboard/groups/[groupId]", "page");
 
     return NextResponse.json(
       { message: "Member removed successfully", data: {} },

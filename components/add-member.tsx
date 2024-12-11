@@ -13,11 +13,12 @@ import { ApiError, ApiResponse } from "@/types/api";
 import { addMemberSchema, AddMemberType } from "@/validation/groups";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, UserPlus } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 function AddMember() {
+  const router = useRouter();
   const { groupId } = useParams<{ groupId: string }>();
   const form = useForm<AddMemberType>({
     defaultValues: {
@@ -53,6 +54,10 @@ function AddMember() {
       }> = await response.json();
 
       toast.success(result.message);
+
+      form.reset();
+
+      router.refresh();
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);

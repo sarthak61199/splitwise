@@ -9,11 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ groupId: string; expenseId: string }> }
 ) {
   const session = await getSession();
-
   const userId = session?.id as string;
 
   const groupIdUnsafe = (await params).groupId;
-
   const groupIdValid = idSchema.safeParse(groupIdUnsafe);
 
   if (!groupIdValid.success) {
@@ -29,7 +27,6 @@ export async function GET(
   const groupId = groupIdValid.data;
 
   const expenseIdUnsafe = (await params).expenseId;
-
   const expenseIdValid = idSchema.safeParse(expenseIdUnsafe);
 
   if (!expenseIdValid.success) {
@@ -128,11 +125,9 @@ export async function PUT(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const groupIdValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!groupIdValid.success) {
@@ -148,7 +143,6 @@ export async function PUT(
     const groupId = groupIdValid.data;
 
     const expenseIdUnsafe = (await params).expenseId;
-
     const expenseIdValid = idSchema.safeParse(expenseIdUnsafe);
 
     if (!expenseIdValid.success) {
@@ -246,11 +240,9 @@ export async function DELETE(
   { params }: { params: Promise<{ groupId: string; expenseId: string }> }
 ) {
   const session = await getSession();
-
   const userId = session?.id as string;
 
   const groupIdUnsafe = (await params).groupId;
-
   const groupIdValid = idSchema.safeParse(groupIdUnsafe);
 
   if (!groupIdValid.success) {
@@ -266,7 +258,6 @@ export async function DELETE(
   const groupId = groupIdValid.data;
 
   const expenseIdUnsafe = (await params).expenseId;
-
   const expenseIdValid = idSchema.safeParse(expenseIdUnsafe);
 
   if (!expenseIdValid.success) {

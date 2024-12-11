@@ -9,11 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ groupId: string }> }
 ) {
   const session = await getSession();
-
   const userId = session?.id as string;
 
   const groupId = (await params).groupId;
-
   const isMember = await prisma.group.findUnique({
     where: {
       id: groupId,
@@ -89,11 +87,9 @@ export async function POST(
 ) {
   try {
     const session = await getSession();
-
     const userId = session?.id as string;
 
     const groupIdUnsafe = (await params).groupId;
-
     const groupIdValid = idSchema.safeParse(groupIdUnsafe);
 
     if (!groupIdValid.success) {
