@@ -1,101 +1,242 @@
+import SignIn from "@/components/sign-in";
+import SignUp from "@/components/sign-up";
+import { Button } from "@/components/ui/button";
+import { getSession } from "@/lib/token";
+import { ArrowRight, Group, Receipt, Wallet } from "lucide-react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { ReactNode } from "react";
 
-export default function Home() {
+export default async function HomePage() {
+  const session = await getSession();
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary">
+      <header className="container mx-auto px-4 py-10">
+        <nav className="flex justify-between items-center mb-16">
+          <div className="text-2xl font-bold text-primary">Splitwise</div>
+          <div className="space-x-4">
+            <SignIn />
+            <SignUp />
+          </div>
+        </nav>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+        <div className="flex flex-col md:flex-row items-center gap-12">
+          <div className="flex-1 space-y-6">
+            <h1 className="text-5xl font-bold text-foreground">
+              Split expenses with friends and family
+            </h1>
+            <p className="text-xl text-gray-600">
+              Keep track of shared expenses and balances with housemates, trips,
+              groups, friends, and family.
+            </p>
+            <Button className="flex items-center gap-2 px-6 py-3">
+              Get Started <ArrowRight size={20} />
+            </Button>
+          </div>
+          <div className="flex-1">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="https://placehold.co/600x400"
+              alt="Expense tracking illustration"
+              className="w-full h-auto rounded-lg shadow-xl"
+              width={600}
+              height={400}
+              priority={true}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </header>
+
+      <section className="bg-white py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
+            Split expenses effortlessly
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={<Group className="w-12 h-12 text-primary" />}
+              title="Create Groups"
+              description="Organize expenses by creating groups for roommates, trips, or events."
+            />
+            <FeatureCard
+              icon={<Receipt className="w-12 h-12 text-primary" />}
+              title="Track Expenses"
+              description="Add expenses and split them equally or with custom amounts."
+            />
+            <FeatureCard
+              icon={<Wallet className="w-12 h-12 text-primary" />}
+              title="Settle Up"
+              description="See who owes whom and settle debts with minimal transactions."
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
+            How It Works
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <StepCard
+              number="1"
+              title="Create a Group"
+              description="Start by creating a group and adding your friends."
+            />
+            <StepCard
+              number="2"
+              title="Add Expenses"
+              description="Record shared expenses as they happen."
+            />
+            <StepCard
+              number="3"
+              title="Split Costs"
+              description="Split expenses equally or with custom amounts."
+            />
+            <StepCard
+              number="4"
+              title="Settle Up"
+              description="Settle debts with simplified payments."
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-primary py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Ready to start splitting expenses?
+          </h2>
+          <p className="text-indigo-100 mb-8">
+            Join thousands of people who trust us for splitting expenses.
+          </p>
+          <button className="px-8 py-4 bg-white text-primary rounded-lg hover:bg-indigo-50 font-semibold">
+            Sign Up Now
+          </button>
+        </div>
+      </section>
+
+      <footer className="bg-foreground text-gray-400 py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-white font-bold mb-4">Splitwise</h3>
+              <p className="text-sm">
+                The easiest way to share expenses with friends and family.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Product</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    FAQ
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a href="#" className="hover:text-white">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Careers
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Terms
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Cookie Policy
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
+            &copy; 2024 Splitwise. All rights reserved.
+          </div>
+        </div>
       </footer>
+    </div>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-lg">
+      <div className="mb-4">{icon}</div>
+      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </div>
+  );
+}
+
+function StepCard({
+  number,
+  title,
+  description,
+}: {
+  number: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-lg relative">
+      <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center absolute -top-4 left-6">
+        {number}
+      </div>
+      <h3 className="text-xl font-semibold text-foreground mt-4 mb-2">
+        {title}
+      </h3>
+      <p className="text-gray-600">{description}</p>
     </div>
   );
 }
